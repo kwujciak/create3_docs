@@ -1,0 +1,47 @@
+# Fast DDS Discovery Server
+
+*This tutorial is done using Ubuntu 22.04*
+
+## A. Disable Discovery Server and Connect to Wifi
+
+1. Navigate back to the robot’s web server via [ethernet](https://iroboteducation.github.io/create3_docs/setup/network-config/#ethernet-over-usb) or the robot’s own [access point](https://edu.irobot.com/create3-setup).
+2. Turn off the discovery server on the Create® 3 robot configuration settings.
+  a. First go to the configuration page under application.
+  ![](./data/app-config-1.png)
+  b. Disable the discovery server by making sure the box is not checked off. If it is already checked off, you can skip this step.
+  ![](./data/disable-dds-2.png)
+3. Connect Create® 3 robot to wifi either via [ethernet](https://iroboteducation.github.io/create3_docs/setup/network-config/#ethernet-over-usb) or through the [robot’s wifi](https://edu.irobot.com/create3-setup) (this will likely take a few tries). 
+  a. The lightring will cycle when it successfully accepts the new network.
+  b. After it cycles, it will turn yellow, then end with a “happy chime” which indicates its restart.
+  c. To check if it’s on the desired network, navigate to the web server (as noted above), click the “About” tab (top right corner), and check the “system IP address” under System Info. If there is no IP or an old IP (one that was used with the network it was previously connected to), it failed to connect to the new network. If your computer is connected to the new network, you can put its IP in your browser to check.
+
+## B. Start Server
+4. Start the server on the virtual machine.
+  a. Replace <VM_IP> with the virtual machine’s IP (the virtual machine from which you are starting the server).
+  'fastdds discovery -i 0 -l <VM_IP> -p 11811'
+  ![](./data/fastdds-3.png)
+5. Navigate back to the robot’s web server via [ethernet](https://iroboteducation.github.io/create3_docs/setup/network-config/#ethernet-over-usb) or its new IP (since the robot is now connected to a new wifi). Go to configuration settings and turn the discovery server back on.
+  a. Make sure to give the Create® 3 robot a namespace that includes a slash (/) at the beginning. 
+  ![](./data/app-config-4.png)
+  
+## C. Start Super Client
+6. Navigate to your VM. Start a new tab in terminal (separate from where the server is running).
+7. Become a “super client" by adding an .xml file to your home folder. 
+  a. Access the template [here](https://github.com/kwujciak/create3/blob/main/super_client_configuration_file.xml).
+  ![](./data/ubuntu-files-5.png)
+  b. In the .xml file, replace VM_IP with your virtual machine’s IP address.
+  ![](./data/xml-file-6.png)
+  c. To find this, type 'ifconfig' in terminal. Your IP is 'inet', as indicated below.
+  ![](./data/inet-7.png)
+  d. Export your .xml file in the same terminal as your super client (not the terminal where the server is running.
+  ![](./data/export-8.png)
+  e. In your super client terminal, stop the daemon by typing 'ros2 daemon stop'.
+  f. Now, try running a topic list by typing 'ros2 topic list'.
+  
+!!! attention
+    **Check the [logs](https://iroboteducation.github.io/create3_docs/webserver/logs/) to see if your robot sees the server. ![](./data/logs-9.png)
+    **If you’re going to change the wifi network, disable the discovery server first.
+    ** Pis, computers, etc. are super clients, while Create® 3 robots are clients.
+
+
+
